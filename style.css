@@ -1,0 +1,31 @@
+#json_container {
+  width: 99%;
+}
+
+#container_contents {
+  display: none;
+}
+
+.ui-widget {
+  font-size: 1em;
+}
+
+.ui-tabs-anchor {
+  font-size: 0.9em;
+}
+
+.child_list {
+  font-size: 0.9em;
+}
+
+.type_tag {
+  color: blue;
+}
+
+.type_trigger {
+  color: chocolate;
+}
+
+.type_variable {
+  color: purple;
+}
