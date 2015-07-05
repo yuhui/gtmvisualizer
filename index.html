@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>GTM Dependency Visualizer</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="polyfill.js"></script>
+  <script src="gtmlib.js"></script>
+  <script src="gtmviz.js"></script>
+  <script>
+  $(function() {
+    $('#tabs').tabs();
+  });
+  </script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>GTM Dependency Visualizer</h1>
+      <div id="introduction">
+        <p>This tool helps you to visualize the dependencies within your GTM container's tags, triggers and variables.</p>
+      </div>
+    </header>
+    <div id="container">
+      <form method="post" id="container_form">
+        <label>
+          Paste your container JSON in here.<br/>
+          <textarea id="json_container" name="json_container" rows="8"></textarea>
+        </label>
+        <p><input type="submit" value="Continue &rarr;"></p>
+      </form>
+    </div>
+    <div id="container_contents">
+      <div id="tabs">
+        <ul>
+          <li><a href="#tags">Tags</a></li>
+          <li><a href="#triggers">Triggers</a></li>
+          <li><a href="#variables">Variables</a></li>
+        </ul>
+        <div id="tags">
+        </div>
+        <div id="triggers">
+        </div>
+        <div id="variables">
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>Copyright &copy; 2015 Yuhui.</p>
+  </footer>
+  <script>
+  $('#container_form').submit(function(event) {
+    GtmViz.setContainer($('#json_container').val());
+
+    GtmViz.listTags();
+    GtmViz.listTriggers();
+    GtmViz.listVariables();
+
+    event.preventDefault();
+
+    $('#container_contents').show();
+  });
+  </script>
+</body>
+</html>
