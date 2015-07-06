@@ -169,8 +169,18 @@ GtmVariable.prototype.hasTriggers = function() {
  */
 function GtmLib(gtmContainer) {
   'use strict';
-  this.containerJson = String.isString(gtmContainer) ?
-      JSON.parse(gtmContainer) : gtmContainer;
+  if (Object.isObject(gtmContainer)) {
+    this.containerJson = gtmContainer;
+  } else if (String.isString(gtmContainer)) {
+    try {
+      this.containerJson = JSON.parse(gtmContainer);
+    } catch (e) {
+      throw new TypeError('Error in specified container JSON.');
+    }
+  } else {
+    throw new TypeError('Specified container is invalid.');
+  }
+
   this.tags = [];
   this.triggers = [];
   this.variables = [];
@@ -538,19 +548,30 @@ GtmLib.prototype.mapTriggersFromTags = function() {
  * @see GtmVariable
  */
 GtmLib.prototype.compileTagsTriggersAndVariables = function() {
-  var container = this.containerJson.containerVersion;
+  var container;
+  if (this.containerJson.containerVersion) {
+    container = this.containerJson.containerVersion;
+  } else {
+    throw new ReferenceError('Missing containerVersion in container.');
+  }
 
-  this.tags = container.tag.map(function(tag) {
-    return new GtmTag(tag);
-  });
+  if (container.tag) {
+    this.tags = container.tag.map(function(tag) {
+      return new GtmTag(tag);
+    });
+  }
 
-  this.triggers = container.trigger.map(function(trigger) {
-    return new GtmTrigger(trigger);
-  });
+  if (container.trigger) {
+    this.triggers = container.trigger.map(function(trigger) {
+      return new GtmTrigger(trigger);
+    });
+  }
 
-  this.variables = container.variable.map(function(variable) {
-    return new GtmVariable(variable);
-  });
+  if (container.variable) {
+    this.variables = container.variable.map(function(variable) {
+      return new GtmVariable(variable);
+    });
+  }
 };
 
 /**

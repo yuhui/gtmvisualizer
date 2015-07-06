@@ -29,3 +29,11 @@
 .type_variable {
   color: purple;
 }
+
+#error_notification {
+  color: red;
+  display: none;
+  margin: 1em;
+  padding: 0.5em 1.5em;
+  border: thin solid red;
+}

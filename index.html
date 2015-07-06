@@ -48,21 +48,35 @@
         </div>
       </div>
     </div>
+    <aside id="error_notification">
+      <header>
+        <h1>Error</h1>
+      </header>
+      <p id="error_message"></p>
+    </aside>
   </main>
   <footer>
     <p>Copyright &copy; 2015 Yuhui.</p>
   </footer>
   <script>
   $('#container_form').submit(function(event) {
-    GtmViz.setContainer($('#json_container').val());
+    $('#container_contents').hide();
+    $('#error_notification').hide();
 
-    GtmViz.listTags();
-    GtmViz.listTriggers();
-    GtmViz.listVariables();
+    try {
+      GtmViz.setContainer($('#json_container').val());
 
-    event.preventDefault();
+      GtmViz.listTags();
+      GtmViz.listTriggers();
+      GtmViz.listVariables();
 
-    $('#container_contents').show();
+      $('#container_contents').show();
+    } catch (e) {
+      $('#error_message').text(e.message);
+      $('#error_notification').show();
+    } finally {
+      event.preventDefault();
+    }
   });
   </script>
 </body>
