@@ -352,6 +352,10 @@ GtmLib.prototype.findVariableByName = function(variableName) {
 GtmLib.prototype._mapVariablesInObject = function(obj) {
   'use strict';
 
+  function _findReservedVariable(variableName) {
+    return ['_event'].includes(variableName);
+  }
+
   var mappedVariables = [];
 
   if (Array.isArray(obj)) {
@@ -363,6 +367,7 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
     var key, value;
     var variableRegexMatch, variableRegex = /\{\{(\w|\s|\.)+\}\}/g;
     var foundVariableNames, foundVariables;
+    var reservedVariableIndex;
 
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -376,8 +381,18 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
                 variableRegexMatch.map(function(matchedName) {
                   // remove the '{{' and '}}' from the variable name
                   var variableName = matchedName.match(/\{\{(.+)\}\}/)[1];
-                  return variableName === '_event' ? 'Event' : variableName;
+                  return variableName;
                 });
+
+            // remove reserved variables
+            reservedVariableIndex =
+                  foundVariableNames.findIndex(_findReservedVariable);
+            while (reservedVariableIndex > -1) {
+              foundVariableNames.splice(reservedVariableIndex, 1);
+              reservedVariableIndex =
+                  foundVariableNames.findIndex(_findReservedVariable);
+            }
+
             // re-map from variable names to variables
             foundVariables = foundVariableNames.map(function(variableName) {
               return this.findVariableByName(variableName);
