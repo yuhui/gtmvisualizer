@@ -169,8 +169,18 @@ GtmVariable.prototype.hasTriggers = function() {
  */
 function GtmLib(gtmContainer) {
   'use strict';
-  this.containerJson = String.isString(gtmContainer) ?
-      JSON.parse(gtmContainer) : gtmContainer;
+  if (Object.isObject(gtmContainer)) {
+    this.containerJson = gtmContainer;
+  } else if (String.isString(gtmContainer)) {
+    try {
+      this.containerJson = JSON.parse(gtmContainer);
+    } catch (e) {
+      throw new TypeError('Error in specified container JSON.');
+    }
+  } else {
+    throw new TypeError('Specified container is invalid.');
+  }
+
   this.tags = [];
   this.triggers = [];
   this.variables = [];
@@ -352,6 +362,10 @@ GtmLib.prototype.findVariableByName = function(variableName) {
 GtmLib.prototype._mapVariablesInObject = function(obj) {
   'use strict';
 
+  function _findReservedVariable(variableName) {
+    return ['_event'].includes(variableName);
+  }
+
   var mappedVariables = [];
 
   if (Array.isArray(obj)) {
@@ -363,6 +377,7 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
     var key, value;
     var variableRegexMatch, variableRegex = /\{\{(\w|\s|\.)+\}\}/g;
     var foundVariableNames, foundVariables;
+    var reservedVariableIndex;
 
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -376,8 +391,18 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
                 variableRegexMatch.map(function(matchedName) {
                   // remove the '{{' and '}}' from the variable name
                   var variableName = matchedName.match(/\{\{(.+)\}\}/)[1];
-                  return variableName === '_event' ? 'Event' : variableName;
+                  return variableName;
                 });
+
+            // remove reserved variables
+            reservedVariableIndex =
+                  foundVariableNames.findIndex(_findReservedVariable);
+            while (reservedVariableIndex > -1) {
+              foundVariableNames.splice(reservedVariableIndex, 1);
+              reservedVariableIndex =
+                  foundVariableNames.findIndex(_findReservedVariable);
+            }
+
             // re-map from variable names to variables
             foundVariables = foundVariableNames.map(function(variableName) {
               return this.findVariableByName(variableName);
@@ -523,19 +548,30 @@ GtmLib.prototype.mapTriggersFromTags = function() {
  * @see GtmVariable
  */
 GtmLib.prototype.compileTagsTriggersAndVariables = function() {
-  var container = this.containerJson.containerVersion;
+  var container;
+  if (this.containerJson.containerVersion) {
+    container = this.containerJson.containerVersion;
+  } else {
+    throw new ReferenceError('Missing containerVersion in container.');
+  }
 
-  this.tags = container.tag.map(function(tag) {
-    return new GtmTag(tag);
-  });
+  if (container.tag) {
+    this.tags = container.tag.map(function(tag) {
+      return new GtmTag(tag);
+    });
+  }
 
-  this.triggers = container.trigger.map(function(trigger) {
-    return new GtmTrigger(trigger);
-  });
+  if (container.trigger) {
+    this.triggers = container.trigger.map(function(trigger) {
+      return new GtmTrigger(trigger);
+    });
+  }
 
-  this.variables = container.variable.map(function(variable) {
-    return new GtmVariable(variable);
-  });
+  if (container.variable) {
+    this.variables = container.variable.map(function(variable) {
+      return new GtmVariable(variable);
+    });
+  }
 };
 
 /**

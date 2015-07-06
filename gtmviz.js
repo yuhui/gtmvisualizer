@@ -5,14 +5,19 @@ var GtmViz = GtmViz || function () {
   "use strict";
 };
 
-GtmViz.container = null;
+GtmViz.container;
 
 /**
  * @constructor
  */
 GtmViz.setContainer = function(jsonContainer) {
+  this.resetContainer();
   this.container = new GtmLib(jsonContainer);
 };
+
+GtmViz.resetContainer = function() {
+  this.container = null;
+}
 
 /**
  * Builds the list from the given objects.
@@ -99,7 +104,7 @@ GtmViz._buildList = function(collection, objects, log) {
       }
       if (object.hasVariables && object.hasVariables()) {
         buildChildren('variables', object.getVariables(), itemChildrenList);
-      }      
+      }
     }
   }
 };
