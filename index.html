@@ -83,10 +83,20 @@
       GtmViz.listVariables();
 
       $('#container_contents').show();
+
+      dataLayer.push({
+        'event': 'submit container',
+        'submitResult': 'Pass'
+      });
     } catch (e) {
       $('#error_message').text(e.message);
       $('#error_notification').show();
-      
+
+      dataLayer.push({
+        'event': 'submit container',
+        'submitResult': 'Fail'
+      });
+
       // throw exception again for GTM to track
       throw new Error(e.message);
     } finally {
