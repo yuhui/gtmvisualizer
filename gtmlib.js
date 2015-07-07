@@ -151,11 +151,17 @@ GtmVariable.prototype.getTags = function() {
 GtmVariable.prototype.getTriggers = function() {
   return this.getItems('triggers');
 }
+GtmVariable.prototype.getVariables = function() {
+  return this.getItems('variables');
+}
 GtmVariable.prototype.hasTags = function() {
   return this.hasItems('tags');
 }
 GtmVariable.prototype.hasTriggers = function() {
   return this.hasItems('triggers');
+}
+GtmVariable.prototype.hasVariables = function() {
+  return this.hasItems('variables');
 }
 
 /**
@@ -375,7 +381,7 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
     }, this);
   } else if (Object.isObject(obj)) {
     var key, value;
-    var variableRegexMatch, variableRegex = /\{\{(\w|\s|\.)+\}\}/g;
+    var variableRegexMatch, variableRegex = /\{\{[\w\s\.\-_]+\}\}/g;
     var foundVariableNames, foundVariables;
     var reservedVariableIndex;
 
@@ -424,20 +430,21 @@ GtmLib.prototype._mapVariablesInObject = function(obj) {
 };
 
 /**
- * Maps all of the variables used in tags or triggers.
+ * Maps all of the variables used in tags, triggers or variables.
  *
  * @private
  *
- * @param {string} tagsOrTriggers 'tags' or 'triggers'.
+ * @param {string} tagsTriggersVariables 'tags', 'triggers' or 'variables'.
  *
  * @this {object} GtmLib.
  *
  * @see _mapVariablesInObject
  */
-GtmLib.prototype._mapVariablesInTagsOrTriggers = function(tagsOrTriggers) {
+GtmLib.prototype._mapVariablesInTagsTriggersOrVariables =
+    function(tagsTriggersVariables) {
   'use strict';
 
-  var collection = this[tagsOrTriggers];
+  var collection = this[tagsTriggersVariables];
 
   collection.forEach(function(object) {
     object.variables = this._mapVariablesInObject(object);
@@ -445,19 +452,27 @@ GtmLib.prototype._mapVariablesInTagsOrTriggers = function(tagsOrTriggers) {
 };
 
 /**
- * @see _mapVariablesInTagsOrTriggers
+ * @see _mapVariablesInTagsTriggersOrVariables
  */
 GtmLib.prototype.mapVariablesInTags = function() {
   'use strict';
-  this._mapVariablesInTagsOrTriggers('tags');
+  this._mapVariablesInTagsTriggersOrVariables('tags');
 };
 
 /**
- * @see _mapVariablesInTagsOrTriggers
+ * @see _mapVariablesInTagsTriggersOrVariables
  */
 GtmLib.prototype.mapVariablesInTriggers = function() {
   'use strict';
-  this._mapVariablesInTagsOrTriggers('triggers');
+  this._mapVariablesInTagsTriggersOrVariables('triggers');
+};
+
+/**
+ * @see _mapVariablesInTagsTriggersOrVariables
+ */
+GtmLib.prototype.mapVariablesInVariables = function() {
+  'use strict';
+  this._mapVariablesInTagsTriggersOrVariables('variables');
 };
 
 /**
@@ -508,14 +523,14 @@ GtmLib.prototype.mapTriggersInTags = function() {
  * @private
  *
  * @param {string} items 'triggers' or 'variables'.
- * @param {string} collection 'tags' or 'triggers'.
+ * @param {string} collection 'tags', 'triggers' or 'variables'.
  */
 GtmLib.prototype._mapItemsFromCollection = function(items, collection) {
   'use strict';
-  var tagsOrTriggers = this[collection];
+  var tagsTriggersVariables = this[collection];
 
-  for (var i = 0, j = tagsOrTriggers.length; i < j; i++) {
-    var object = tagsOrTriggers[i];
+  for (var i = 0, j = tagsTriggersVariables.length; i < j; i++) {
+    var object = tagsTriggersVariables[i];
 
     for (var k = 0, l = object[items].length; k < l; k++) {
       var item = object[items][k];
@@ -524,16 +539,33 @@ GtmLib.prototype._mapItemsFromCollection = function(items, collection) {
   }
 };
 
+/**
+ * @see _mapItemsFromCollection
+ */
 GtmLib.prototype.mapVariablesFromTags = function() {
   'use strict';
   this._mapItemsFromCollection('variables', 'tags');
 };
 
+/**
+ * @see _mapItemsFromCollection
+ */
 GtmLib.prototype.mapVariablesFromTriggers = function() {
   'use strict';
   this._mapItemsFromCollection('variables', 'triggers');
 };
 
+/**
+ * @see _mapItemsFromCollection
+ */
+GtmLib.prototype.mapVariablesFromVariables = function() {
+  'use strict';
+  this._mapItemsFromCollection('variables', 'variables');
+};
+
+/**
+ * @see _mapItemsFromCollection
+ */
 GtmLib.prototype.mapTriggersFromTags = function() {
   'use strict';
   this._mapItemsFromCollection('triggers', 'tags');
@@ -749,9 +781,11 @@ GtmLib.prototype.mapTagsTriggersAndVariables = function() {
   'use strict';
   this.mapVariablesInTags();
   this.mapVariablesInTriggers();
+  this.mapVariablesInVariables();
   this.mapTriggersInTags();
 
   this.mapVariablesFromTags();
   this.mapVariablesFromTriggers();
+  this.mapVariablesFromVariables();
   this.mapTriggersFromTags();
 };
