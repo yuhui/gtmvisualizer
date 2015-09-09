@@ -631,91 +631,170 @@ GtmLib.prototype.addBuiltInVariables = function() {
     switch(name) {
 
     case 'PAGE_URL':
+    case 'pageUrl':
       convertedName = 'Page URL';
       break;
     case 'PAGE_HOSTNAME':
+    case 'pageHostname':
       convertedName = 'Page Hostname';
       break;
     case 'PAGE_PATH':
+    case 'pagePath':
       convertedName = 'Page Path';
       break;
     case 'REFERRER':
+    case 'referrer':
       convertedName = 'Referrer';
       break;
     case 'EVENT':
+    case 'event':
       convertedName = 'Event';
       break;
-    case 'CLICK_ELEMENT':
-      convertedName = 'Click Element';
+    case 'CONTAINER_ID':
+    case 'containerId':
+      convertedName = 'Container ID';
       break;
-    case 'CLICK_CLASSES':
-      convertedName = 'Click Classes';
+    case 'CONTAINER_VERSION':
+    case 'containerVersion':
+      convertedName = 'Container Version';
       break;
-    case 'CLICK_ID':
-      convertedName = 'Click ID';
+    case 'RANDOM_NUMBER':
+    case 'randomNumber':
+      convertedName = 'Random Number';
       break;
-    case 'CLICK_TARGET':
-      convertedName = 'Click Target';
-      break;
-    case 'CLICK_URL':
-      convertedName = 'Click URL';
-      break;
-    case 'CLICK_TEXT':
-      convertedName = 'Click Text';
-      break;
-    case 'FORM_ELEMENT':
-      convertedName = 'Form Element';
-      break;
-    case 'FORM_CLASSES':
-      convertedName = 'Form Classes';
-      break;
-    case 'FORM_ID':
-      convertedName = 'Form ID';
-      break;
-    case 'FORM_TARGET':
-      convertedName = 'Form Target';
-      break;
-    case 'FORM_URL':
-      convertedName = 'Form URL';
-      break;
-    case 'FORM_TEXT':
-      convertedName = 'Form Text';
+    case 'HTML_ID':
+    case 'htmlId':
+      convertedName = 'HTML ID';
       break;
     case 'ERROR_MESSAGE':
+    case 'errorMessage':
       convertedName = 'Error Message';
       break;
     case 'ERROR_URL':
+    case 'errorUrl':
       convertedName = 'Error URL';
       break;
     case 'ERROR_LINE':
+    case 'errorLine':
       convertedName = 'Error Line';
       break;
+    case 'DEBUG_MODE':
+    case 'debugMode':
+      convertedName = 'Debug Mode';
+      break;
+    case 'CLICK_ELEMENT':
+    case 'clickElement':
+      convertedName = 'Click Element';
+      break;
+    case 'CLICK_CLASSES':
+    case 'clickClasses':
+      convertedName = 'Click Classes';
+      break;
+    case 'CLICK_ID':
+    case 'clickId':
+      convertedName = 'Click ID';
+      break;
+    case 'CLICK_TARGET':
+    case 'clickTarget':
+      convertedName = 'Click Target';
+      break;
+    case 'CLICK_URL':
+    case 'clickUrl':
+      convertedName = 'Click URL';
+      break;
+    case 'CLICK_TEXT':
+    case 'clickText':
+      convertedName = 'Click Text';
+      break;
+    case 'FORM_ELEMENT':
+    case 'formElement':
+      convertedName = 'Form Element';
+      break;
+    case 'FORM_CLASSES':
+    case 'formClasses':
+      convertedName = 'Form Classes';
+      break;
+    case 'FORM_ID':
+    case 'formId':
+      convertedName = 'Form ID';
+      break;
+    case 'FORM_TARGET':
+    case 'formTarget':
+      convertedName = 'Form Target';
+      break;
+    case 'FORM_URL':
+    case 'formUrl':
+      convertedName = 'Form URL';
+      break;
+    case 'FORM_TEXT':
+    case 'formText':
+      convertedName = 'Form Text';
+      break;
     case 'NEW_HISTORY_FRAGMENT':
+    case 'newHistoryFragment':
       convertedName = 'New History Fragment';
       break;
     case 'OLD_HISTORY_FRAGMENT':
+    case 'oldHistoryFragment':
       convertedName = 'Old History Fragment';
       break;
     case 'NEW_HISTORY_STATE':
+    case 'newHistoryState':
       convertedName = 'New History State';
       break;
     case 'OLD_HISTORY_STATE':
+    case 'oldHistoryState':
       convertedName = 'Old History State';
       break;
     case 'HISTORY_SOURCE':
+    case 'historySource':
       convertedName = 'History Source';
       break;
-    case 'CONTAINER_VERSION':
-      convertedName = 'Container Version';
+    case 'APP_ID':
+    case 'appId':
+      convertedName = 'App ID';
       break;
-    case 'DEBUG_MODE':
-      convertedName = 'Debug Mode';
+    case 'APP_NAME':
+    case 'APP_VERSION_NAME':
+    case 'appName':
+    case 'appVersionName':
+      convertedName = 'App Name';
       break;
-    case 'RANDOM_NUMBER':
-      convertedName = 'Random Number';
+    case 'APP_VERSION_CODE':
+    case 'appVersionCode':
+      convertedName = 'App Version Code';
       break;
-    case 'CONTAINER_ID':
-      convertedName = 'Container ID';
+    case 'SDK_VERSION':
+    case 'sdkVersion':
+      convertedName = 'SDK Version';
+      break;
+    case 'ADVERTISING_TRACKING_ENABLED':
+    case 'advertisingTrackingEnabled':
+      convertedName = 'Advertising Tracking Enabled';
+      break;
+    case 'DEVICE_NAME':
+    case 'deviceName':
+      convertedName = 'Device Name';
+      break;
+    case 'LANGUAGE':
+    case 'language':
+      convertedName = 'Language';
+      break;
+    case 'OS_VERSION':
+    case 'osVersion':
+      convertedName = 'OS Version';
+      break;
+    case 'PLATFORM':
+    case 'platform':
+      convertedName = 'Platform';
+      break;
+    case 'RESOLUTION':
+    case 'resolution':
+      convertedName = 'Screen Resolution';
+      break;
+    case 'ADVERTISER_ID':
+    case 'advertiserId':
+      convertedName = 'Advertiser ID';
       break;
     }
 
