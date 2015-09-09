@@ -175,16 +175,26 @@ GtmVariable.prototype.hasVariables = function() {
  */
 function GtmLib(gtmContainer) {
   'use strict';
+  var containerJson;
   if (Object.isObject(gtmContainer)) {
-    this.containerJson = gtmContainer;
+    containerJson = gtmContainer;
   } else if (String.isString(gtmContainer)) {
     try {
-      this.containerJson = JSON.parse(gtmContainer);
+      containerJson = JSON.parse(gtmContainer);
     } catch (e) {
       throw new TypeError('Error in specified container JSON.');
     }
   } else {
     throw new TypeError('Specified container is invalid.');
+  }
+
+  this.containerVersion = null;
+  if (containerJson.containerVersion) {
+    this.containerVersion = containerJson.containerVersion;
+  } else if (containerJson.hasOwnProperty('container')) {
+    this.containerVersion = containerJson;
+  } else {
+    throw new ReferenceError('Missing containerVersion in container.');
   }
 
   this.tags = [];
@@ -235,8 +245,8 @@ GtmLib.prototype.numVariables = function() {
 
 GtmLib.prototype.hasContainer = function() {
   'use strict';
-  return this.isObject(this.containerJson) &&
-      Object.keys(this.containerJson).length > 0;
+  return this.isObject(this.containerVersion) &&
+      Object.keys(this.containerVersion).length > 0;
 };
 
 GtmLib.prototype.hasTags = function() {
@@ -580,27 +590,20 @@ GtmLib.prototype.mapTriggersFromTags = function() {
  * @see GtmVariable
  */
 GtmLib.prototype.compileTagsTriggersAndVariables = function() {
-  var container;
-  if (this.containerJson.containerVersion) {
-    container = this.containerJson.containerVersion;
-  } else {
-    throw new ReferenceError('Missing containerVersion in container.');
-  }
-
-  if (container.tag) {
-    this.tags = container.tag.map(function(tag) {
+  if (this.containerVersion.tag) {
+    this.tags = this.containerVersion.tag.map(function(tag) {
       return new GtmTag(tag);
     });
   }
 
-  if (container.trigger) {
-    this.triggers = container.trigger.map(function(trigger) {
+  if (this.containerVersion.trigger) {
+    this.triggers = this.containerVersion.trigger.map(function(trigger) {
       return new GtmTrigger(trigger);
     });
   }
 
-  if (container.variable) {
-    this.variables = container.variable.map(function(variable) {
+  if (this.containerVersion.variable) {
+    this.variables = this.containerVersion.variable.map(function(variable) {
       return new GtmVariable(variable);
     });
   }
@@ -836,7 +839,7 @@ GtmLib.prototype.addBuiltInVariables = function() {
   }
   // end _createNewVariable()
 
-  var container = this.containerJson.containerVersion.container;
+  var container = this.containerVersion.container;
   if (container.hasOwnProperty('enabledBuiltInVariable')) {
     var builtInVariables = container.enabledBuiltInVariable;
     builtInVariables.forEach(_createNewVariable, this);
