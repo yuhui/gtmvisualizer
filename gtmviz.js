@@ -25,7 +25,7 @@ GtmViz.resetContainer = function() {
  * @param {string} collection 'tags', 'triggers' or 'variables'
  * @param {jQuery array} objects tags, triggers or variables
  */
-GtmViz._buildList = function(collection, objects, log) {
+GtmViz._buildList = function(collection, objects) {
 
   /**
    * Builds the list of children from the given object.
@@ -49,21 +49,21 @@ GtmViz._buildList = function(collection, objects, log) {
     });
     childItem.append(childList);
 
-    var childObject, childListItem, childListItemName;
-    for (var x = 0, y = childObjects.length; x < y; x++) {
-      childObject = childObjects[x];
-      childListItem = $('<li>', {
+    $.each(childObjects, function() {
+      var childObject = this;
+
+      var childListItem = $('<li>', {
         id: childId + '_' + childObject.objectId
       });
       childList.append(childListItem);
 
-      childListItemName = $('<span>', {
+      var childListItemName = $('<span>', {
         class: 'type_' +
             childCollection.substring(0, childCollection.length - 1),
         text: childObject.name
       });
       childListItem.append(childListItemName);
-    }
+    });
   }
 
   if (objects.length > 0) {
@@ -75,8 +75,8 @@ GtmViz._buildList = function(collection, objects, log) {
     });
     parentNode.append(collectionList);
 
-    for (var i = 0, j = objects.length; i < j; i++) {
-      var object = objects[i];
+    $.each(objects, function() {
+      var object = this;
 
       var collectionItemId = collection + '_' + object.objectId;
       var collectionItem = $('<li>', {
@@ -105,7 +105,7 @@ GtmViz._buildList = function(collection, objects, log) {
       if (object.hasVariables && object.hasVariables()) {
         buildChildren('variables', object.getVariables(), itemChildrenList);
       }
-    }
+    });
   }
 };
 
