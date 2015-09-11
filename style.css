@@ -1,3 +1,17 @@
+body {
+margin: 0 auto;
+}
+
+header {
+background-color: SeaGreen;
+color: white;
+padding: 0.1em 1em;
+}
+
+h1 {
+font-family: 'Ubuntu', sans-serif;
+}
+
 #gtm_accounts_containers,
 #gtm_accounts,
 #gtm_containers,
@@ -22,41 +36,50 @@ font-size: 0.9em;
 }
 
 #json_container {
-  width: 99%;
+font-family: monospace;
+font-size: 0.9em;
+width: 99%;
 }
 
 #container_contents {
-  display: none;
+display: none;
 }
 
 .ui-widget {
-  font-size: 1em;
+font-size: 1em;
 }
 
 .ui-tabs-anchor {
-  font-size: 0.9em;
+font-size: 0.9em;
 }
 
 .child_list {
-  font-size: 0.9em;
+font-size: 0.9em;
 }
 
 .type_tag {
-  color: blue;
+color: blue;
 }
 
 .type_trigger {
-  color: chocolate;
+color: Chocolate;
 }
 
 .type_variable {
-  color: purple;
+color: purple;
 }
 
 #error_notification {
-  color: red;
-  display: none;
-  margin: 1em;
-  padding: 0.5em 1.5em;
-  border: thin solid red;
+color: red;
+display: none;
+margin: 1em;
+padding: 0.5em 1.5em;
+border: thin solid red;
+}
+
+footer {
+font-family: serif;
+font-style: italic;
+color: gray;
+margin: 0 1em;
 }

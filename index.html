@@ -3,10 +3,11 @@
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <title>GTM Dependency Visualizer</title>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
   <script src="common.js"></script>
   <script src="polyfill.js"></script>
   <script src="gtmlib.js"></script>
@@ -14,6 +15,9 @@
   <script src="gapi_utils.js"></script>
   <script>
   $(function() {
+    $('#get_container').accordion({
+      heightStyle: 'content'
+    });
     $('#tabs').tabs();
   });
   </script>
