@@ -1,6 +1,12 @@
 /**
- * Polyfills
+ * @fileoverview Polyfills.
  * Taken from Mozilla Developer Network https://developer.mozilla.org.
+ * @author yuhuibc@gmail.com (Yuhui)
+ *
+ * @preserve Copyright 2015 Yuhui.
+ * Licensed under the GNU General Public License v3.0.
+ * Refer to LICENSE for the full license text and copyright
+ * notice for this file.
  */
 
 if (!String.isString) {

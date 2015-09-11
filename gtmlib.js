@@ -1,6 +1,11 @@
 /**
- * TODO
- * map tags and triggers from variables
+ * @fileoverview Model of the GTM container.
+ * @author yuhuibc@gmail.com (Yuhui)
+ *
+ * @preserve Copyright 2015 Yuhui.
+ * Licensed under the GNU General Public License v3.0.
+ * Refer to LICENSE for the full license text and copyright
+ * notice for this file.
  */
 
 /**
@@ -175,16 +180,26 @@ GtmVariable.prototype.hasVariables = function() {
  */
 function GtmLib(gtmContainer) {
   'use strict';
+  var containerJson;
   if (Object.isObject(gtmContainer)) {
-    this.containerJson = gtmContainer;
+    containerJson = gtmContainer;
   } else if (String.isString(gtmContainer)) {
     try {
-      this.containerJson = JSON.parse(gtmContainer);
+      containerJson = JSON.parse(gtmContainer);
     } catch (e) {
       throw new TypeError('Error in specified container JSON.');
     }
   } else {
     throw new TypeError('Specified container is invalid.');
+  }
+
+  this.containerVersion = null;
+  if (containerJson.containerVersion) {
+    this.containerVersion = containerJson.containerVersion;
+  } else if (containerJson.hasOwnProperty('container')) {
+    this.containerVersion = containerJson;
+  } else {
+    throw new ReferenceError('Missing containerVersion in container.');
   }
 
   this.tags = [];
@@ -235,8 +250,8 @@ GtmLib.prototype.numVariables = function() {
 
 GtmLib.prototype.hasContainer = function() {
   'use strict';
-  return this.isObject(this.containerJson) &&
-      Object.keys(this.containerJson).length > 0;
+  return this.isObject(this.containerVersion) &&
+      Object.keys(this.containerVersion).length > 0;
 };
 
 GtmLib.prototype.hasTags = function() {
@@ -580,27 +595,20 @@ GtmLib.prototype.mapTriggersFromTags = function() {
  * @see GtmVariable
  */
 GtmLib.prototype.compileTagsTriggersAndVariables = function() {
-  var container;
-  if (this.containerJson.containerVersion) {
-    container = this.containerJson.containerVersion;
-  } else {
-    throw new ReferenceError('Missing containerVersion in container.');
-  }
-
-  if (container.tag) {
-    this.tags = container.tag.map(function(tag) {
+  if (this.containerVersion.tag) {
+    this.tags = this.containerVersion.tag.map(function(tag) {
       return new GtmTag(tag);
     });
   }
 
-  if (container.trigger) {
-    this.triggers = container.trigger.map(function(trigger) {
+  if (this.containerVersion.trigger) {
+    this.triggers = this.containerVersion.trigger.map(function(trigger) {
       return new GtmTrigger(trigger);
     });
   }
 
-  if (container.variable) {
-    this.variables = container.variable.map(function(variable) {
+  if (this.containerVersion.variable) {
+    this.variables = this.containerVersion.variable.map(function(variable) {
       return new GtmVariable(variable);
     });
   }
@@ -631,91 +639,170 @@ GtmLib.prototype.addBuiltInVariables = function() {
     switch(name) {
 
     case 'PAGE_URL':
+    case 'pageUrl':
       convertedName = 'Page URL';
       break;
     case 'PAGE_HOSTNAME':
+    case 'pageHostname':
       convertedName = 'Page Hostname';
       break;
     case 'PAGE_PATH':
+    case 'pagePath':
       convertedName = 'Page Path';
       break;
     case 'REFERRER':
+    case 'referrer':
       convertedName = 'Referrer';
       break;
     case 'EVENT':
+    case 'event':
       convertedName = 'Event';
       break;
-    case 'CLICK_ELEMENT':
-      convertedName = 'Click Element';
+    case 'CONTAINER_ID':
+    case 'containerId':
+      convertedName = 'Container ID';
       break;
-    case 'CLICK_CLASSES':
-      convertedName = 'Click Classes';
+    case 'CONTAINER_VERSION':
+    case 'containerVersion':
+      convertedName = 'Container Version';
       break;
-    case 'CLICK_ID':
-      convertedName = 'Click ID';
+    case 'RANDOM_NUMBER':
+    case 'randomNumber':
+      convertedName = 'Random Number';
       break;
-    case 'CLICK_TARGET':
-      convertedName = 'Click Target';
-      break;
-    case 'CLICK_URL':
-      convertedName = 'Click URL';
-      break;
-    case 'CLICK_TEXT':
-      convertedName = 'Click Text';
-      break;
-    case 'FORM_ELEMENT':
-      convertedName = 'Form Element';
-      break;
-    case 'FORM_CLASSES':
-      convertedName = 'Form Classes';
-      break;
-    case 'FORM_ID':
-      convertedName = 'Form ID';
-      break;
-    case 'FORM_TARGET':
-      convertedName = 'Form Target';
-      break;
-    case 'FORM_URL':
-      convertedName = 'Form URL';
-      break;
-    case 'FORM_TEXT':
-      convertedName = 'Form Text';
+    case 'HTML_ID':
+    case 'htmlId':
+      convertedName = 'HTML ID';
       break;
     case 'ERROR_MESSAGE':
+    case 'errorMessage':
       convertedName = 'Error Message';
       break;
     case 'ERROR_URL':
+    case 'errorUrl':
       convertedName = 'Error URL';
       break;
     case 'ERROR_LINE':
+    case 'errorLine':
       convertedName = 'Error Line';
       break;
+    case 'DEBUG_MODE':
+    case 'debugMode':
+      convertedName = 'Debug Mode';
+      break;
+    case 'CLICK_ELEMENT':
+    case 'clickElement':
+      convertedName = 'Click Element';
+      break;
+    case 'CLICK_CLASSES':
+    case 'clickClasses':
+      convertedName = 'Click Classes';
+      break;
+    case 'CLICK_ID':
+    case 'clickId':
+      convertedName = 'Click ID';
+      break;
+    case 'CLICK_TARGET':
+    case 'clickTarget':
+      convertedName = 'Click Target';
+      break;
+    case 'CLICK_URL':
+    case 'clickUrl':
+      convertedName = 'Click URL';
+      break;
+    case 'CLICK_TEXT':
+    case 'clickText':
+      convertedName = 'Click Text';
+      break;
+    case 'FORM_ELEMENT':
+    case 'formElement':
+      convertedName = 'Form Element';
+      break;
+    case 'FORM_CLASSES':
+    case 'formClasses':
+      convertedName = 'Form Classes';
+      break;
+    case 'FORM_ID':
+    case 'formId':
+      convertedName = 'Form ID';
+      break;
+    case 'FORM_TARGET':
+    case 'formTarget':
+      convertedName = 'Form Target';
+      break;
+    case 'FORM_URL':
+    case 'formUrl':
+      convertedName = 'Form URL';
+      break;
+    case 'FORM_TEXT':
+    case 'formText':
+      convertedName = 'Form Text';
+      break;
     case 'NEW_HISTORY_FRAGMENT':
+    case 'newHistoryFragment':
       convertedName = 'New History Fragment';
       break;
     case 'OLD_HISTORY_FRAGMENT':
+    case 'oldHistoryFragment':
       convertedName = 'Old History Fragment';
       break;
     case 'NEW_HISTORY_STATE':
+    case 'newHistoryState':
       convertedName = 'New History State';
       break;
     case 'OLD_HISTORY_STATE':
+    case 'oldHistoryState':
       convertedName = 'Old History State';
       break;
     case 'HISTORY_SOURCE':
+    case 'historySource':
       convertedName = 'History Source';
       break;
-    case 'CONTAINER_VERSION':
-      convertedName = 'Container Version';
+    case 'APP_ID':
+    case 'appId':
+      convertedName = 'App ID';
       break;
-    case 'DEBUG_MODE':
-      convertedName = 'Debug Mode';
+    case 'APP_NAME':
+    case 'APP_VERSION_NAME':
+    case 'appName':
+    case 'appVersionName':
+      convertedName = 'App Name';
       break;
-    case 'RANDOM_NUMBER':
-      convertedName = 'Random Number';
+    case 'APP_VERSION_CODE':
+    case 'appVersionCode':
+      convertedName = 'App Version Code';
       break;
-    case 'CONTAINER_ID':
-      convertedName = 'Container ID';
+    case 'SDK_VERSION':
+    case 'sdkVersion':
+      convertedName = 'SDK Version';
+      break;
+    case 'ADVERTISING_TRACKING_ENABLED':
+    case 'advertisingTrackingEnabled':
+      convertedName = 'Advertising Tracking Enabled';
+      break;
+    case 'DEVICE_NAME':
+    case 'deviceName':
+      convertedName = 'Device Name';
+      break;
+    case 'LANGUAGE':
+    case 'language':
+      convertedName = 'Language';
+      break;
+    case 'OS_VERSION':
+    case 'osVersion':
+      convertedName = 'OS Version';
+      break;
+    case 'PLATFORM':
+    case 'platform':
+      convertedName = 'Platform';
+      break;
+    case 'RESOLUTION':
+    case 'resolution':
+      convertedName = 'Screen Resolution';
+      break;
+    case 'ADVERTISER_ID':
+    case 'advertiserId':
+      convertedName = 'Advertiser ID';
       break;
     }
 
@@ -757,7 +844,7 @@ GtmLib.prototype.addBuiltInVariables = function() {
   }
   // end _createNewVariable()
 
-  var container = this.containerJson.containerVersion.container;
+  var container = this.containerVersion.container;
   if (container.hasOwnProperty('enabledBuiltInVariable')) {
     var builtInVariables = container.enabledBuiltInVariable;
     builtInVariables.forEach(_createNewVariable, this);

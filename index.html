@@ -6,18 +6,25 @@
   </script>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <title>GTM Dependency Visualizer</title>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <script src="common.js"></script>
   <script src="polyfill.js"></script>
   <script src="gtmlib.js"></script>
   <script src="gtmviz.js"></script>
+  <script src="gapi_utils.js"></script>
   <script>
   $(function() {
+    $('#get_container').accordion({
+      heightStyle: 'content'
+    });
     $('#tabs').tabs();
   });
   </script>
+  <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </head>
 <body>
   <!-- Google Tag Manager -->
@@ -36,14 +43,37 @@
         <p>This tool helps you to visualize the dependencies within your GTM container's tags, triggers and variables.</p>
       </div>
     </header>
-    <div id="container">
-      <form method="post" id="container_form">
-        <label>
-          Paste your container JSON in here.<br/>
-          <textarea id="json_container" name="json_container" rows="8"></textarea>
-        </label>
-        <p><input type="submit" value="Continue &rarr;"></p>
-      </form>
+    <div id="get_container">
+      <h3>Visualize the containers that you have access to.</h3>
+      <div id="gtm_api">
+        <div id="gtm_authorize">
+          <p>Sign in and authorize to access your containers.</p>
+          <button id="authorize_button">Authorize</button>
+        </div>
+        <div id="gtm_accounts_containers">
+          <p>Choose a container to visualize.</p>
+          <select id="gtm_accounts">
+            <option>Select account...</option>
+          </select>
+          <select id="gtm_containers">
+            <option>Select container...</option>
+          </select>
+          <select id="gtm_container_versions">
+            <option>Select container version...</option>
+          </select>
+          <progress id="gtm_progress" value="0" max="100">Loading...</progress>
+        </div>
+      </div>
+      <h3>Or copy your container JSON into here.</h3>
+      <div id="container">
+        <form method="post" id="container_form">
+          <label>
+            <p>Container JSON:</p>
+            <textarea id="json_container" name="json_container" rows="8"></textarea>
+          </label>
+          <p><input type="submit" value="Continue &rarr;"></p>
+        </form>
+      </div>
     </div>
     <div id="container_contents">
       <div id="tabs">
@@ -73,32 +103,20 @@
   <script>
   $('#container_form').submit(function(event) {
     $('#container_contents').hide();
-    $('#error_notification').hide();
+    hideErrorNotification();
 
     try {
-      GtmViz.setContainer($('#json_container').val());
-
-      GtmViz.listTags();
-      GtmViz.listTriggers();
-      GtmViz.listVariables();
-
-      $('#container_contents').show();
-
-      dataLayer.push({
+      showContainer($('#json_container').val());
+      window.dataLayer.push({
         'event': 'submit container',
         'submitResult': 'pass'
       });
     } catch (e) {
-      $('#error_message').text(e.message);
-      $('#error_notification').show();
-
-      dataLayer.push({
+      showErrorNotification(e.message);
+      window.dataLayer.push({
         'event': 'submit container',
-        'submitResult': 'fail'
+        'submitResult': 'pass'
       });
-
-      // throw exception again for GTM to track
-      throw new Error(e.message);
     } finally {
       event.preventDefault();
     }
