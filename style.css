@@ -1,3 +1,26 @@
+#gtm_accounts_containers,
+#gtm_accounts,
+#gtm_containers,
+#gtm_container_versions,
+#gtm_progress {
+display: none;
+}
+
+#gtm_accounts,
+#gtm_containers,
+#gtm_container_versions {
+font-size: 0.9em;
+}
+
+#gtm_api p,
+#container p {
+margin-top: 0;
+}
+
+#get_container {
+font-size: 0.9em;
+}
+
 #json_container {
   width: 99%;
 }
